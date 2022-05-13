@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements CategoryTask.Cate
                 intent.putExtra("id", movies.get(position).getId());
                 startActivity(intent);
             } else {
-                Toast.makeText(MainActivity.this, "Sem informações para esse filme", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Sem informações para esse filme...", Toast.LENGTH_SHORT).show();
             }
         }
 
