@@ -13,6 +13,7 @@ import br.com.vinicius.netflixremake.model.Category
 import br.com.vinicius.netflixremake.model.Movie
 import br.com.vinicius.netflixremake.util.CategoryTask
 import br.com.vinicius.netflixremake.util.ImageDownloaderTask
+import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_movie.view.image_view_cover_movie
 import kotlinx.android.synthetic.main.activity_movie.view.text_view_title
@@ -94,8 +95,13 @@ class MainActivity : AppCompatActivity() {
 
     private class MovieHolder(itemView: View, val onClick: ((Movie) -> Unit)?) : RecyclerView.ViewHolder(itemView) {
         fun bind(movie: Movie) = with(itemView) {
-            ImageDownloaderTask(image_view_cover_movie)
-                .execute(movie.coverUrl)
+
+            //ImageDownloaderTask(image_view_cover_movie).execute(movie.coverUrl)
+            Glide.with(context)
+                .load(movie.coverUrl)
+                .placeholder(R.drawable.placeholder_bg)
+                .into(image_view_cover_movie)
+
             image_view_cover_movie.setOnClickListener {
                 onClick?.invoke(movie)
             }
