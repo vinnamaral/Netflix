@@ -12,10 +12,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MovieActivity"
-            android:exported="true">
-        </activity>
-        <activity
             android:name=".kotlin.MovieActivity"
             android:exported="true">
         </activity>

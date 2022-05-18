@@ -9,15 +9,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import br.com.vinicius.netflixremake.R
+import br.com.vinicius.netflixremake.model.Categories
 import br.com.vinicius.netflixremake.model.Category
 import br.com.vinicius.netflixremake.model.Movie
-import br.com.vinicius.netflixremake.util.CategoryTask
-import br.com.vinicius.netflixremake.util.ImageDownloaderTask
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_movie.view.image_view_cover_movie
 import kotlinx.android.synthetic.main.activity_movie.view.text_view_title
 import kotlinx.android.synthetic.main.category_item.view.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
 
@@ -33,13 +35,24 @@ class MainActivity : AppCompatActivity() {
 
         rv_main.layoutManager = LinearLayoutManager(this)
 
-        val categoryTask = CategoryTask(this)
-        categoryTask.setCategoryLoader {
-            mainAdapter.categories.clear()
-            mainAdapter.categories.addAll(it)
-            mainAdapter.notifyDataSetChanged()
-        }
-        categoryTask.execute("https://tiagoaguiar.co/api/netflix/home")
+        //categoryTask.execute("https://tiagoaguiar.co/api/netflix/home")
+        retrofit().create(NetflixAPI::class.java)
+            .listCategories()
+            .enqueue(object : Callback<Categories> {
+                override fun onResponse(call: Call<Categories>, response: Response<Categories>) {
+                    if(response.isSuccessful) {
+                        response.body()?.let {
+                            mainAdapter.categories.clear()
+                            mainAdapter.categories.addAll(it.categories)
+                            mainAdapter.notifyDataSetChanged()
+                        }
+                    }
+                }
+
+                override fun onFailure(call: Call<Categories>, t: Throwable) {
+                    Toast.makeText(this@MainActivity, t.message, Toast.LENGTH_SHORT).show()
+                }
+            })
     }
 
     private inner class MainAdapter(val categories: MutableList<Category>) : RecyclerView.Adapter<CategoryHolder>() {
